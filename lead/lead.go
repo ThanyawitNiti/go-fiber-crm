@@ -44,6 +44,24 @@ func NewLead(c *fiber.Ctx) {
 
 }
 
+func EditLead(c *fiber.Ctx) {
+	id := c.Params("id")
+	db := database.DBConn
+	var lead Lead
+	db.First(&lead, id)
+
+	if lead.Name == "" {
+		c.Status(500).Send("No lead found with given ID")
+		return
+	}
+	if name := c.FormValue("name"); name != "" {
+		lead.Name = name
+	}
+	c.BodyParser(&lead) // Set variable of body from request
+	db.Save(&lead)
+	c.SendString("Lead successfully updated")
+}
+
 func DeleteLead(c *fiber.Ctx) {
 	id := c.Params("id")
 	db := database.DBConn
