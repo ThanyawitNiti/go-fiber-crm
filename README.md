@@ -16,3 +16,7 @@ DELETE /api/v1/lead/{id} - Flag delete a company by its ID.<br>
 
 ## Tutorial Reference
 This project is based on the freeCodeCamp.org tutorial:[⌨️ CRM with Golang Fiber](https://www.youtube.com/watch?v=jFfo23yIWac) 
+
+## Problem
+- Error : Incorrect table name '' when doing put method.
+- Solution : using c.BodyParser before update data.
