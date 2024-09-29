@@ -54,6 +54,6 @@ func DeleteLead(c *fiber.Ctx) {
 		c.Status(500).Send("No lead found with given ID")
 		return
 	}
-	db.Delete(&lead)
+	db.Delete(&lead) // Flag delete
 	c.Send("Lead successfully deleted")
 }
