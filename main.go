@@ -2,11 +2,15 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/ThanyawitNiti/go-fiber-crm/database"
 	"github.com/ThanyawitNiti/go-fiber-crm/lead"
 	"github.com/gofiber/fiber"
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 )
 
 // create route
@@ -18,8 +22,25 @@ func setupRoutes(app *fiber.App) {
 }
 
 func initDatabase() {
+	pwd, err_ := os.Getwd() //current directory of project
+	if err_ != nil {
+		panic(err_)
+	}
+
+	err_ = godotenv.Load(filepath.Join(pwd, "/config/.env"))
+	if err_ != nil {
+		fmt.Println("Error loading .env file")
+		log.Fatalf("Error loading .env file: %v", err_)
+	}
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", dbUser, dbPassword, dbHost, dbPort, dbName)
+
 	var err error
-	database.DBConn, err = gorm.Open("mysql", "root.db")
+	database.DBConn, err = gorm.Open("mysql", dsn)
 	if err != nil {
 		panic("failed to connect database")
 	}
